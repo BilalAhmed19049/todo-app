@@ -1,15 +1,24 @@
 import 'package:equatable/equatable.dart';
 
+import '../../utils/task_categories.dart';
+
 class Task extends Equatable {
   final int? id;
   final String title;
   final String note;
   final String time;
   final String date;
-  final String isCompleted;
+  final TaskCategories category;
+  final bool isCompleted;
 
   const Task(
-      this.id, this.title, this.note, this.time, this.date, this.isCompleted);
+      {this.id,
+      required this.title,
+      required this.note,
+      required this.time,
+      required this.date,
+      required this.category,
+      required this.isCompleted});
 
   @override
   List<Object> get props {
@@ -20,6 +29,7 @@ class Task extends Equatable {
       time,
       date,
       isCompleted,
+      category,
     ];
   }
 }

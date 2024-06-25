@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:todo_app/data/models/models.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/widgets/display_list_of_tasks.dart';
 import 'package:todo_app/widgets/text_widget.dart';
@@ -51,7 +52,15 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const DisplayListOfTasks(tasks: []),
+                  const DisplayListOfTasks(tasks: [
+                    Task(
+                        title: 'title',
+                        note: 'note',
+                        time: '10:20',
+                        date: 'Aug, 07, 2024',
+                        isCompleted: false,
+                        category: TaskCategories.shopping)
+                  ]),
                   const Gap(20),
                   TextWidget(
                       size: 20,

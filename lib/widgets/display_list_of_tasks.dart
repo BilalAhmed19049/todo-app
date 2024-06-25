@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:todo_app/utils/utils.dart';
 
 import '../data/models/task.dart';
@@ -32,7 +33,24 @@ class DisplayListOfTasks extends StatelessWidget {
               itemCount: tasks.length,
               padding: EdgeInsets.zero,
               itemBuilder: (ctx, index) {
-                return Text('Hello');
+                final task = tasks[index];
+                return Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(9),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: task.category.color.withOpacity(0.3),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          task.category.icon,
+                          color: task.category.color,
+                        ),
+                      ),
+                    )
+                  ],
+                );
               }),
     );
   }
