@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/utils/utils.dart';
+import 'package:todo_app/widgets/task_details.dart';
+import 'package:todo_app/widgets/task_tile.dart';
 
 import '../data/models/task.dart';
 import 'common_container.dart';
@@ -28,30 +29,29 @@ class DisplayListOfTasks extends StatelessWidget {
           ? Center(
               child: Text(emptyTaskMessage),
             )
-          : ListView.builder(
+          : ListView.separated(
               shrinkWrap: true,
               itemCount: tasks.length,
               padding: EdgeInsets.zero,
               itemBuilder: (ctx, index) {
                 final task = tasks[index];
-                return Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(9),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: task.category.color.withOpacity(0.3),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          task.category.icon,
-                          color: task.category.color,
-                        ),
-                      ),
-                    )
-                  ],
+                return InkWell(
+                    onLongPress: () {},
+                    onTap: () async {
+                      await showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) {
+                            return TaskDetails(task: task);
+                          });
+                    },
+                    child: TaskTile(task: task));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const Divider(
+                  thickness: 1.5,
                 );
-              }),
+              },
+            ),
     );
   }
 }
