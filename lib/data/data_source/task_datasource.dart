@@ -3,6 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:todo_app/data/data.dart';
 import 'package:todo_app/utils/db_keys.dart';
 
+import '../../utils/task_keys.dart';
+
 class TaskDatasource {
   static final TaskDatasource _instance = TaskDatasource._();
 
@@ -29,18 +31,18 @@ class TaskDatasource {
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async {
+  void _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE ${DBKeys.dbTable}(
-      ${DBKeys.idColumn} INTEGER PRIMARY KET AUTOINCREMENT,
-      ${DBKeys.titleColumn} TEXT,
-      ${DBKeys.noteColumn} TEXT,
-      ${DBKeys.dateColumn} TEXT,
-      ${DBKeys.timeColumn} TEXT,
-      ${DBKeys.categoryColumn} TEXT,
-      ${DBKeys.isCompletedColumn} INTEGER,
+      CREATE TABLE ${DBKeys.dbTable} (
+        ${TaskKeys.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${TaskKeys.title} TEXT,
+        ${TaskKeys.note} TEXT,
+        ${TaskKeys.date} TEXT,
+        ${TaskKeys.time} TEXT,
+        ${TaskKeys.category} TEXT,
+        ${TaskKeys.isCompleted} INTEGER
       )
-      ''');
+    ''');
   }
 
   Future<int> addTask(Task task) async {

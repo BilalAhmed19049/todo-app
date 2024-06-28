@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/providers/task/task_provider.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/widgets/task_details.dart';
 import 'package:todo_app/widgets/task_tile.dart';
@@ -6,7 +8,7 @@ import 'package:todo_app/widgets/task_tile.dart';
 import '../data/models/task.dart';
 import 'common_container.dart';
 
-class DisplayListOfTasks extends StatelessWidget {
+class DisplayListOfTasks extends ConsumerWidget {
   const DisplayListOfTasks(
       {super.key, required this.tasks, this.isCompletedTasks = false});
 
@@ -14,7 +16,7 @@ class DisplayListOfTasks extends StatelessWidget {
   final bool isCompletedTasks;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final deviceSize = context.deviceSize;
     final height =
         isCompletedTasks ? deviceSize.height * 0.25 : deviceSize.height * 0.3;
@@ -36,7 +38,9 @@ class DisplayListOfTasks extends StatelessWidget {
               itemBuilder: (ctx, index) {
                 final task = tasks[index];
                 return InkWell(
-                    onLongPress: () {},
+                    onLongPress: () {
+                      AppAlert.showDeleteAlertDialog(context, ref, task);
+                    },
                     onTap: () async {
                       await showModalBottomSheet(
                           context: context,
@@ -44,7 +48,21 @@ class DisplayListOfTasks extends StatelessWidget {
                             return TaskDetails(task: task);
                           });
                     },
-                    child: TaskTile(task: task));
+                    child: TaskTile(
+                      task: task,
+                      onCompleted: (value) async {
+                        await ref
+                            .read(taskProvider.notifier)
+                            .updateTask(task)
+                            .then((value) {
+                          AppAlert.displaySnackBar(
+                              context,
+                              task.isCompleted
+                                  ? 'Task incomplete'
+                                  : 'Task completed');
+                        });
+                      },
+                    ));
               },
               separatorBuilder: (BuildContext context, int index) {
                 return const Divider(

@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/config/routes/route_location.dart';
-import 'package:todo_app/data/models/models.dart';
+import 'package:todo_app/providers/date_provider.dart';
+import 'package:todo_app/providers/task/task_provider.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/widgets/display_list_of_tasks.dart';
 import 'package:todo_app/widgets/text_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../data/models/task.dart';
+
+class HomeScreen extends ConsumerWidget {
   static HomeScreen builder(BuildContext context, GoRouterState state) =>
       const HomeScreen();
 
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colorScheme;
     final deviceSize = context.deviceSize;
+    final taskState = ref.watch(taskProvider);
+    final completedTasks = _completedTasks(taskState.tasks, ref);
+    final incompleteTasks = _incompletedTasks(taskState.tasks, ref);
+    final selectedDate = ref.watch(dateProvider);
 
     return Scaffold(
         body: Stack(
@@ -30,11 +39,14 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const Gap(40),
-                  TextWidget(
-                      size: 14,
-                      text: 'Aug 7, 2023',
-                      fontWeight: FontWeight.normal,
-                      color: context.colorScheme.surface),
+                  InkWell(
+                    onTap: () => Helpers.selectDate(context, ref),
+                    child: TextWidget(
+                        size: 14,
+                        text: DateFormat.yMMMd().format(selectedDate),
+                        fontWeight: FontWeight.normal,
+                        color: context.colorScheme.surface),
+                  ),
                   const Gap(10),
                   TextWidget(
                       size: 40,
@@ -57,29 +69,7 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const DisplayListOfTasks(tasks: [
-                    Task(
-                        title: 'title',
-                        note: 'note',
-                        time: '10:20',
-                        date: 'Aug, 07, 2024',
-                        isCompleted: false,
-                        category: TaskCategories.shopping),
-                    Task(
-                        title: 'title',
-                        note: 'note',
-                        time: '10:20',
-                        date: 'Aug, 07, 2024',
-                        isCompleted: false,
-                        category: TaskCategories.travel),
-                    Task(
-                        title: 'gaming',
-                        note: 'note',
-                        time: '10:20',
-                        date: 'Aug, 07, 2024',
-                        isCompleted: false,
-                        category: TaskCategories.work),
-                  ]),
+                  DisplayListOfTasks(tasks: incompleteTasks),
                   const Gap(20),
                   TextWidget(
                       size: 20,
@@ -87,23 +77,8 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.normal,
                       color: Colors.black),
                   const Gap(20),
-                  const DisplayListOfTasks(
-                    tasks: [
-                      Task(
-                          title: 'title',
-                          note: '',
-                          time: '10:20',
-                          date: 'Aug, 07, 2024',
-                          isCompleted: true,
-                          category: TaskCategories.shopping),
-                      Task(
-                          title: 'title',
-                          note: '',
-                          time: '10:20',
-                          date: 'Aug, 07, 2024',
-                          isCompleted: true,
-                          category: TaskCategories.travel),
-                    ],
+                  DisplayListOfTasks(
+                    tasks: completedTasks,
                     isCompletedTasks: true,
                   ),
                   const Gap(20),
@@ -126,5 +101,32 @@ class HomeScreen extends StatelessWidget {
         )
       ],
     ));
+  }
+
+  List<Task> _completedTasks(List<Task> tasks, WidgetRef ref) {
+    final selectedDate = ref.watch(dateProvider);
+    final List<Task> filteredTasks = [];
+    for (var task in tasks) {
+      if (task.isCompleted) {
+        final isTaskDay = Helpers.isTaskFromSelectedDate(task, selectedDate);
+        if (task.isCompleted && isTaskDay) {
+          filteredTasks.add(task);
+        }
+      }
+    }
+    return filteredTasks;
+  }
+
+  List<Task> _incompletedTasks(List<Task> tasks, WidgetRef ref) {
+    final selectedDate = ref.watch(dateProvider);
+    final List<Task> filteredTasks = [];
+    for (var task in tasks) {
+      final isTaskDay = Helpers.isTaskFromSelectedDate(task, selectedDate);
+
+      if (!task.isCompleted && isTaskDay) {
+        filteredTasks.add(task);
+      }
+    }
+    return filteredTasks;
   }
 }
