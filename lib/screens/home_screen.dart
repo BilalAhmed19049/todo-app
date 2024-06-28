@@ -9,7 +9,6 @@ import 'package:todo_app/providers/task/task_provider.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/widgets/display_list_of_tasks.dart';
 import 'package:todo_app/widgets/text_widget.dart';
-
 import '../data/models/task.dart';
 
 class HomeScreen extends ConsumerWidget {
