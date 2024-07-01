@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:todo_app/utils/utils.dart';
 
+import '../config/routes/route_location.dart';
 import '../data/models/task.dart';
 import 'circle_container.dart';
 
@@ -49,6 +51,11 @@ class TaskTile extends StatelessWidget {
             ],
           ),
           const Spacer(),
+          IconButton(
+              onPressed: () {
+                context.push(RouteLocation.createTask);
+              },
+              icon: const Icon(Icons.edit)),
           Checkbox(value: task.isCompleted, onChanged: onCompleted)
         ],
       ),

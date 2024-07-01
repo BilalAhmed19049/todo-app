@@ -3,12 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_app/config/routes/route_location.dart';
 import 'package:todo_app/providers/date_provider.dart';
 import 'package:todo_app/providers/task/task_provider.dart';
+import 'package:todo_app/screens/create_task_screen.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:todo_app/widgets/display_list_of_tasks.dart';
 import 'package:todo_app/widgets/text_widget.dart';
+
 import '../data/models/task.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -83,7 +84,10 @@ class HomeScreen extends ConsumerWidget {
                   const Gap(20),
                   ElevatedButton(
                       onPressed: () {
-                        context.push(RouteLocation.createTask);
+                        Navigator.push(context, MaterialPageRoute(builder: (
+                            ctx) => CreateTaskScreen()
+                        )
+                        );
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),

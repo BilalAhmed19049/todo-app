@@ -52,17 +52,18 @@ class DisplayListOfTasks extends ConsumerWidget {
                       task: task,
                       onCompleted: (value) async {
                         await ref
-                            .read(taskProvider.notifier)
-                            .updateTask(task)
-                            .then((value) {
-                          AppAlert.displaySnackBar(
-                              context,
-                              task.isCompleted
-                                  ? 'Task incomplete'
-                                  : 'Task completed');
-                        });
-                      },
-                    ));
+                          .read(taskProvider.notifier)
+                          .updateTask(task)
+                          .then((value) {
+                        AppAlert.displaySnackBar(
+                            context,
+                            task.isCompleted
+                                ? 'Task incomplete'
+                                : 'Task completed');
+                      });
+                    },
+                  ),
+                );
               },
               separatorBuilder: (BuildContext context, int index) {
                 return const Divider(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:todo_app/screens/create_task_screen.dart';
 import 'package:todo_app/utils/extension.dart';
 import 'package:todo_app/widgets/circle_container.dart';
 
@@ -45,7 +46,17 @@ class TaskDetails extends StatelessWidget {
                   Icon(
                     Icons.check_box,
                     color: task.category.color,
-                  )
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => CreateTaskScreen(
+                                      taskId: task.id,
+                                    )));
+                      },
+                      icon: const Icon(Icons.edit))
                 ],
               )),
           const Gap(16),
@@ -54,7 +65,7 @@ class TaskDetails extends StatelessWidget {
             color: task.category.color,
           ),
           Text(task.note.isEmpty
-              ? ' There is no additional notes for this taks'
+              ? ' There is no additional notes for this task'
               : task.note),
           Gap(16),
           Visibility(

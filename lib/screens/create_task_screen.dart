@@ -15,13 +15,9 @@ import '../widgets/select_date_time.dart';
 import '../widgets/text_field_widget.dart';
 
 class CreateTaskScreen extends ConsumerStatefulWidget {
-  static CreateTaskScreen builder(
-    BuildContext context,
-    GoRouterState state,
-  ) =>
-      const CreateTaskScreen();
+  const CreateTaskScreen({super.key, this.taskId});
 
-  const CreateTaskScreen({super.key});
+  final int? taskId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -71,7 +67,6 @@ class _CreateTaskScreenState extends ConsumerState<CreateTaskScreen> {
               Gap(30),
               ElevatedButton(
                   onPressed: () {
-                    //print('On press is working**********');
                     _createTask();
                   },
                   child: Text('Save'))
